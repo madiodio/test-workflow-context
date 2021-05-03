@@ -1,0 +1,33 @@
+name: Pull request
+# This workflow will run anytime there is an open pull request.
+
+on:
+  workflow_run:
+    workflows: ["Any working branch"]
+    branches:
+      - feature/**/*
+    types:
+      - completed
+
+jobs:
+  build_deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ahmadnassri/action-workflow-run-wait@v1
+
+      - name: Just dump GitHub Context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Restore dependencies
+        uses: actions/cache@v2
+        id: restore-build
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Building...
+        run: yarn build

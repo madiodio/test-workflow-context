@@ -1,0 +1,28 @@
+name: Any working branch
+# This workflow will run anytime there is a push on the following branches (feature/**, fix/**, develop/**)
+
+on:
+  push:
+    branches:
+      - feature/**/*
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache node_modules dependencies
+        id: node-cache
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Installing Dependencies...
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --check-files
+
+      - name: Buiding...
+        run: |
+          yarn build
