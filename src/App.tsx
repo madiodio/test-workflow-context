@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import React, { useState } from "react";
+import logo from "./logo.svg";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+
+  const doubled = React.useMemo(() => count * 2, [count]);
 
   return (
     <div className="App">
@@ -14,6 +16,7 @@ function App() {
           <button onClick={() => setCount((count) => count + 1)}>
             count is: {count}
           </button>
+          <p style={{ marginTop: "2rem" }}>Double is: {doubled}</p>
         </p>
         <p>
           Edit <code>App.tsx</code> and save to test HMR updates.
@@ -27,7 +30,7 @@ function App() {
           >
             Learn React
           </a>
-          {' | '}
+          {" | "}
           <a
             className="App-link"
             href="https://vitejs.dev/guide/features.html"
@@ -39,7 +42,7 @@ function App() {
         </p>
       </header>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
